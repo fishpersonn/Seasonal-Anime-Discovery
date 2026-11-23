@@ -121,4 +121,9 @@ export interface Translations {
   sortEpisodes: string;
   sortTitle: string;
   clearSearch: string;
+  save: string;
+  saved: string;
+  loadingTrailer: string;
+  notAvailable: string;
+  errorTitle: string;
 }

@@ -39,7 +39,12 @@ export const dictionaries: Record<'en' | 'zh', Translations> = {
     sortDate: "Newest Airing",
     sortEpisodes: "Most Episodes",
     sortTitle: "Title (A-Z)",
-    clearSearch: "Clear search"
+    clearSearch: "Clear search",
+    save: "Save",
+    saved: "Saved",
+    loadingTrailer: "Loading trailer...",
+    notAvailable: "N/A",
+    errorTitle: "Oops, connection lost (｡•́︿•̀｡)"
   },
   zh: {
     season: "2026 冬季",
@@ -79,6 +84,11 @@ export const dictionaries: Record<'en' | 'zh', Translations> = {
     sortDate: "最新播出",
     sortEpisodes: "集數最多",
     sortTitle: "名稱 (A-Z)",
-    clearSearch: "清除搜尋"
+    clearSearch: "清除搜尋",
+    save: "收藏",
+    saved: "已收藏",
+    loadingTrailer: "預告片載入中...",
+    notAvailable: "暫無",
+    errorTitle: "哎呀，連線中斷了 (｡•́︿•̀｡)"
   }
 };

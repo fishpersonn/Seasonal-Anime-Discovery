@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Anime, FilterState, Translations } from '../types';
 import { toneAt } from '../utils/candyColors';
+import { genreLabel, sourceLabel } from '../utils/labels';
 import { X, Filter, Sparkles, BookOpen, Layers, Heart } from 'lucide-react';
 
 interface FilterSidebarProps {
@@ -10,6 +11,7 @@ interface FilterSidebarProps {
   isOpen: boolean;
   onCloseMobile: () => void;
   t: Translations;
+  language: 'en' | 'zh';
 }
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({ 
@@ -18,7 +20,8 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   setFilters,
   isOpen,
   onCloseMobile,
-  t
+  t,
+  language
 }) => {
   
   // Calculate counts dynamically based on the full dataset
@@ -150,7 +153,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     : 'text-candy-soft hover:bg-candy-800 hover:text-candy-ink border-l-8 border-transparent'
                 }`}
               >
-                <span>{source}</span>
+                <span>{sourceLabel(source, language)}</span>
                 <span className={`text-xs ${filters.source === source ? 'text-candy-ink' : 'text-candy-soft'}`}>
                   {count}
                 </span>
@@ -179,7 +182,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     : `${tone.soft} ${tone.softBorder} ${tone.text} hover:-translate-y-0.5`
                 }`}
               >
-                {name} <span className="opacity-60 ml-1">({count})</span>
+                {genreLabel(name, language)} <span className="opacity-60 ml-1">({count})</span>
               </button>
               );
             })}

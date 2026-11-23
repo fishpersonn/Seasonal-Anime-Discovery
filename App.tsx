@@ -353,6 +353,7 @@ const App: React.FC = () => {
           isOpen={isSidebarOpen}
           onCloseMobile={() => setIsSidebarOpen(false)}
           t={t}
+          language={language}
         />
 
         {/* Main Content */}
@@ -371,7 +372,7 @@ const App: React.FC = () => {
               <div className="rounded-full bg-pink-200 p-4 mb-4">
                 <WifiOff className="h-12 w-12 text-pink-500" />
               </div>
-              <h3 className="text-xl font-bold text-pink-500 mb-2">哎呀，連線中斷了 (｡•́︿•̀｡)</h3>
+              <h3 className="text-xl font-bold text-pink-500 mb-2">{t.errorTitle}</h3>
               <p className="text-candy-soft max-w-md mb-8">{t.error}</p>
               <button 
                 onClick={() => fetchAnime(1, true)}
@@ -422,6 +423,7 @@ const App: React.FC = () => {
                         isFavorite={favorites.has(anime.mal_id)}
                         toggleFavorite={toggleFavorite}
                         t={t}
+                        language={language}
                       />
                     ))}
                   </div>

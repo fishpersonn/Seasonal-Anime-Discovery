@@ -2,6 +2,7 @@ import React from 'react';
 import { Anime, Translations } from '../types';
 import { PlayCircle, Star, Heart } from 'lucide-react';
 import { toneAt } from '../utils/candyColors';
+import { genreLabel, sourceLabel } from '../utils/labels';
 
 interface AnimeCardProps {
   anime: Anime;
@@ -9,12 +10,13 @@ interface AnimeCardProps {
   isFavorite: boolean;
   toggleFavorite: (id: number) => void;
   t: Translations;
+  language: 'en' | 'zh';
 }
 
-const AnimeCard: React.FC<AnimeCardProps> = ({ anime, onClick, isFavorite, toggleFavorite, t }) => {
+const AnimeCard: React.FC<AnimeCardProps> = ({ anime, onClick, isFavorite, toggleFavorite, t, language }) => {
   const displayTitle = anime.title_english || anime.title;
   const tone = toneAt(anime.mal_id);
-  const displayGenre = anime.genres.slice(0, 3).map(g => g.name).join(' • ');
+  const displayGenre = anime.genres.slice(0, 3).map(g => genreLabel(g.name, language)).join(' • ');
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -44,7 +46,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, onClick, isFavorite, toggl
         <div className="absolute top-0 left-0 w-full p-2 flex justify-between items-start z-10">
           {/* Source Badge */}
           <div className={`rounded-full px-2.5 py-1 text-xs font-bold shadow-sm ${tone.solid}`}>
-            {anime.source}
+            {sourceLabel(anime.source, language)}
           </div>
 
           {/* Favorite Button */}

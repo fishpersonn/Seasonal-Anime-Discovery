@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Anime, Translations } from '../types';
-import { X, Star, Users, Heart, Calendar, Play, Languages, ExternalLink, Loader2, Youtube } from 'lucide-react';
+import { X, Star, Users, Heart, Calendar, Play, ExternalLink, Loader2, Youtube } from 'lucide-react';
 import { toneAt } from '../utils/candyColors';
-import { getGoogleTranslateUrl } from '../services/aiService';
+import { genreLabel, typeLabel } from '../utils/labels';
 
 interface AnimeModalProps {
   anime: Anime | null;
@@ -107,7 +107,7 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
                   }`}
                 >
                   <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
-                  <span className="text-sm font-semibold">{isFavorite ? 'Saved' : 'Save'}</span>
+                  <span className="text-sm font-semibold">{isFavorite ? t.saved : t.save}</span>
                 </button>
               </div>
             </div>
@@ -116,7 +116,7 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
             <div className="flex flex-wrap gap-4 text-sm font-medium">
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-yellow-100 text-yellow-700 border-2 border-yellow-300">
                 <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span>{anime.score || 'N/A'} {t.score}</span>
+                <span>{anime.score || t.notAvailable} {t.score}</span>
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-sky-100 text-sky-700 border-2 border-sky-300">
                 <Users className="w-4 h-4 text-sky-500" />
@@ -135,11 +135,11 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
             {/* Tags */}
             <div className="flex flex-wrap gap-2">
               <span className="px-3 py-1 text-xs font-bold text-pink-600 bg-pink-100 rounded-full">
-                {anime.type}
+                {typeLabel(anime.type, language)}
               </span>
               {anime.genres.map((genre, i) => (
                 <span key={genre.mal_id} className={`px-3 py-1 text-xs font-medium border-2 rounded-full ${toneAt(i + 1).soft} ${toneAt(i + 1).softBorder} ${toneAt(i + 1).text}`}>
-                  {genre.name}
+                  {genreLabel(genre.name, language)}
                 </span>
               ))}
             </div>
@@ -148,21 +148,6 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-candy-ink">{t.synopsis}</h3>
-                
-                {/* Google Translate Button (Only visible if synopsis exists) */}
-                {anime.synopsis && (
-                  <a 
-                    href={getGoogleTranslateUrl(anime.synopsis)}
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-xs text-candy-highlight hover:text-candy-accent transition-colors border-2 border-pink-300/30 hover:bg-candy-800 px-2 py-1 rounded-full"
-                    title="Translate with Google"
-                  >
-                    <Languages className="w-3 h-3" />
-                    <span>Google 翻譯</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                )}
               </div>
               
               <div className="p-4 rounded-3xl bg-candy-800/50 border-2 border-pink-300/30 min-h-[100px]">
@@ -182,12 +167,12 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
                   {!isVideoLoaded && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-candy-800 z-10">
                       <Loader2 className="w-8 h-8 text-sky-400 animate-spin" />
-                      <span className="text-sm text-candy-soft font-medium animate-pulse">Loading trailer...</span>
+                      <span className="text-sm text-candy-soft font-medium animate-pulse">{t.loadingTrailer}</span>
                     </div>
                   )}
                   <iframe 
                     src={trailerUrl}
-                    title="Trailer"
+                    title={t.trailer}
                     className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}
                     allowFullScreen
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
