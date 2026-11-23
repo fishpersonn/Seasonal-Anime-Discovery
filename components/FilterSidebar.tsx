@@ -57,9 +57,11 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   };
 
   const handleGenreClick = (id: number) => {
-    setFilters(prev => ({ 
-      ...prev, 
-      genre: prev.genre === id ? null : id 
+    setFilters(prev => ({
+      ...prev,
+      genres: prev.genres.includes(id)
+        ? prev.genres.filter(g => g !== id)
+        : [...prev.genres, id]
     }));
   };
 
@@ -71,7 +73,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   };
 
   const clearFilters = () => {
-    setFilters(prev => ({ ...prev, source: null, genre: null, favoritesOnly: false }));
+    setFilters(prev => ({ ...prev, source: null, genres: [], favoritesOnly: false }));
   };
 
   const sidebarClasses = `
@@ -120,7 +122,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </button>
 
         {/* Distinct Show All Button */}
-        {(filters.source || filters.genre || filters.favoritesOnly) && (
+        {(filters.source || filters.genres.length > 0 || filters.favoritesOnly) && (
           <button 
             onClick={clearFilters}
             className="w-full mb-8 py-2.5 px-4 bg-gradient-to-r from-pink-400 via-yellow-400 to-emerald-400 hover:brightness-110 text-white rounded-3xl transition-all flex items-center justify-center gap-2 font-semibold shadow-lg shadow-pink-400/30 border-2 border-pink-200/40 group animate-in fade-in slide-in-from-top-2 duration-200"
@@ -170,8 +172,9 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               <button
                 key={id}
                 onClick={() => handleGenreClick(id)}
+                aria-pressed={filters.genres.includes(id)}
                 className={`px-3 py-1.5 text-xs rounded-full border transition-all ${
-                  filters.genre === id
+                  filters.genres.includes(id)
                     ? `${tone.solid} ${tone.border} shadow-lg`
                     : `${tone.soft} ${tone.softBorder} ${tone.text} hover:-translate-y-0.5`
                 }`}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { fetchWinter2026AnimePage } from './services/jikanService';
 import { Anime, FilterState, SortOption } from './types';
 import AnimeCard from './components/AnimeCard';
@@ -8,30 +8,85 @@ import AnimeModal from './components/AnimeModal';
 import Toast from './components/Toast';
 import FallingPetals from './components/FallingPetals';
 import { dictionaries } from './utils/translations';
-import { Search, Menu, Snowflake, Globe, RefreshCcw, WifiOff, ArrowUp, ChevronDown, Loader2, ListFilter } from 'lucide-react';
+import { Search, Menu, Snowflake, Globe, RefreshCcw, WifiOff, ArrowUp, Loader2, ListFilter, X } from 'lucide-react';
+
+type Lang = 'en' | 'zh';
+
+const SORT_OPTIONS: SortOption[] = ['default', 'score', 'popularity', 'members', 'date', 'episodes', 'title'];
+const SEARCH_DEBOUNCE_MS = 300;
+
+const detectLanguage = (): Lang => {
+  try {
+    const stored = localStorage.getItem('language');
+    if (stored === 'en' || stored === 'zh') return stored;
+  } catch { /* ignore */ }
+  return navigator.language?.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+};
+
+// Read filters / sort from the URL so links are shareable and survive reloads.
+const readUrlState = (): { filters: FilterState; sort: SortOption } => {
+  const params = new URLSearchParams(window.location.search);
+  const sort = params.get('sort') as SortOption | null;
+  return {
+    filters: {
+      source: params.get('source'),
+      genres: (params.get('genre') || '')
+        .split(',')
+        .map(Number)
+        .filter(n => Number.isInteger(n) && n > 0),
+      search: params.get('q') || '',
+      favoritesOnly: params.get('fav') === '1',
+    },
+    sort: sort && SORT_OPTIONS.includes(sort) ? sort : 'default',
+  };
+};
+
+const sortAnime = (list: Anime[], option: SortOption): Anime[] => {
+  const nullsLast = (a: number | null | undefined, b: number | null | undefined, desc: boolean) => {
+    if (a == null && b == null) return 0;
+    if (a == null) return 1;
+    if (b == null) return -1;
+    return desc ? b - a : a - b;
+  };
+  const time = (a: Anime) => (a.aired?.from ? Date.parse(a.aired.from) : null);
+  const name = (a: Anime) => a.title_english || a.title;
+
+  return [...list].sort((a, b) => {
+    switch (option) {
+      case 'score': return nullsLast(a.score, b.score, true);
+      case 'members': return nullsLast(a.members, b.members, true);
+      case 'popularity': return nullsLast(a.popularity || null, b.popularity || null, false); // rank: lower is better
+      case 'date': return nullsLast(time(a), time(b), true);
+      case 'episodes': return nullsLast(a.episodes, b.episodes, true);
+      case 'title': return name(a).localeCompare(name(b));
+      default: return 0;
+    }
+  });
+};
 
 const App: React.FC = () => {
   const [animeList, setAnimeList] = useState<Anime[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Persistent failure flag: unlike `error` (shown in a toast that auto-dismisses),
+  // this stays set until the next fetch so the retry UI doesn't vanish.
+  const [loadFailed, setLoadFailed] = useState(false);
   
   // Pagination State
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
 
   // Language State
-  const [language, setLanguage] = useState<'en' | 'zh'>('en');
+  const [language, setLanguage] = useState<Lang>(detectLanguage);
   const t = dictionaries[language];
 
   // Filters & Sort State
-  const [filters, setFilters] = useState<FilterState>({
-    source: null,
-    genre: null,
-    search: '',
-    favoritesOnly: false,
-  });
-  const [sortOption, setSortOption] = useState<SortOption>('default');
+  const [initialUrlState] = useState(readUrlState);
+  const [filters, setFilters] = useState<FilterState>(initialUrlState.filters);
+  const [sortOption, setSortOption] = useState<SortOption>(initialUrlState.sort);
+  // Raw input value; debounced into filters.search
+  const [searchInput, setSearchInput] = useState(initialUrlState.filters.search);
 
   // Favorites State (Persisted)
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
@@ -51,6 +106,36 @@ const App: React.FC = () => {
       }
     }
   }, []);
+
+  // Persist language and reflect it on <html>
+  useEffect(() => {
+    try { localStorage.setItem('language', language); } catch { /* ignore */ }
+    document.documentElement.lang = language === 'zh' ? 'zh-Hant' : 'en';
+  }, [language]);
+
+  // Debounce search input -> filters.search
+  useEffect(() => {
+    if (searchInput === filters.search) return;
+    const timer = setTimeout(() => {
+      setFilters(prev => ({ ...prev, search: searchInput }));
+    }, SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [searchInput, filters.search]);
+
+  // Sync filters + sort to the URL
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (filters.search) params.set('q', filters.search);
+    if (filters.source) params.set('source', filters.source);
+    if (filters.genres.length) params.set('genre', filters.genres.join(','));
+    if (filters.favoritesOnly) params.set('fav', '1');
+    if (sortOption !== 'default') params.set('sort', sortOption);
+    const qs = params.toString();
+    const next = `${window.location.pathname}${qs ? `?${qs}` : ''}${window.location.hash}`;
+    if (next !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
+      window.history.replaceState(null, '', next);
+    }
+  }, [filters, sortOption]);
 
   // Scroll Listener
   useEffect(() => {
@@ -77,7 +162,10 @@ const App: React.FC = () => {
   };
 
   // Fetch Logic
+  const isFetchingRef = useRef(false);
   const fetchAnime = useCallback(async (pageNum: number, isReset: boolean = false) => {
+    if (isFetchingRef.current) return;
+    isFetchingRef.current = true;
     try {
       if (isReset) {
         setIsInitialLoading(true);
@@ -85,6 +173,7 @@ const App: React.FC = () => {
         setIsLoadingMore(true);
       }
       setError(null);
+      setLoadFailed(false);
 
       const { data, pagination } = await fetchWinter2026AnimePage(pageNum);
       
@@ -95,7 +184,9 @@ const App: React.FC = () => {
     } catch (err) {
       console.error(err);
       setError(t.error); 
+      setLoadFailed(true);
     } finally {
+      isFetchingRef.current = false;
       setIsInitialLoading(false);
       setIsLoadingMore(false);
     }
@@ -106,11 +197,22 @@ const App: React.FC = () => {
     fetchAnime(1, true);
   }, []); 
 
-  const handleLoadMore = () => {
-    if (!isLoadingMore && hasNextPage) {
-      fetchAnime(page + 1);
-    }
-  };
+  // Infinite scroll: load the next page whenever the sentinel is visible.
+  // The observer is re-created after every load so a still-visible sentinel keeps
+  // pulling pages (this also lets filters see the whole season, not just what is loaded).
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node || isInitialLoading || isLoadingMore || !hasNextPage || loadFailed) return;
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) fetchAnime(page + 1);
+      },
+      { rootMargin: '400px' }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [isInitialLoading, isLoadingMore, hasNextPage, loadFailed, page, fetchAnime, animeList.length]);
 
   // Filter & Sort Logic
   const filteredAndSortedAnime = useMemo(() => {
@@ -119,7 +221,7 @@ const App: React.FC = () => {
       if (filters.source && anime.source !== filters.source) return false;
       
       // 2. Genre Filter
-      if (filters.genre && !anime.genres.some(g => g.mal_id === filters.genre)) return false;
+      if (filters.genres.length > 0 && !filters.genres.every(id => anime.genres.some(g => g.mal_id === id))) return false;
       
       // 3. Search Filter
       if (filters.search) {
@@ -136,24 +238,27 @@ const App: React.FC = () => {
     });
 
     // 5. Sorting
-    if (sortOption !== 'default') {
-      result = [...result].sort((a, b) => {
-        if (sortOption === 'score') {
-          return (b.score || 0) - (a.score || 0);
-        } else if (sortOption === 'popularity') {
-          // Note: Jikan 'popularity' is rank (lower is better), but usually users expect "Most Popular" 
-          // to mean higher numbers of members. Jikan also gives 'members'.
-          // Let's use members count for popularity sorting as it's more intuitive visually.
-          return (b.members || 0) - (a.members || 0);
-        } else if (sortOption === 'members') {
-          return (b.members || 0) - (a.members || 0);
-        }
-        return 0;
-      });
-    }
+    if (sortOption !== 'default') result = sortAnime(result, sortOption);
 
     return result;
   }, [animeList, filters, favorites, sortOption]);
+
+  const clearSearch = () => {
+    setSearchInput('');
+    setFilters(prev => ({ ...prev, search: '' }));
+  };
+
+  const clearButton = searchInput ? (
+    <button
+      type="button"
+      onClick={clearSearch}
+      aria-label={t.clearSearch}
+      title={t.clearSearch}
+      className="absolute inset-y-0 right-0 flex items-center pr-3 text-pink-400 hover:text-candy-accent"
+    >
+      <X className="h-4 w-4" />
+    </button>
+  ) : null;
 
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'en' ? 'zh' : 'en');
@@ -203,9 +308,10 @@ const App: React.FC = () => {
                 type="text"
                 placeholder={t.searchPlaceholder}
                 className="block w-full rounded-full border-2 border-sky-300 bg-candy-800/80 py-2 pl-10 pr-4 text-sm text-candy-ink placeholder-pink-300 focus:border-pink-400 focus:outline-none focus:ring-4 focus:ring-pink-300/40 transition-all"
-                value={filters.search}
-                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
               />
+              {clearButton}
             </div>
 
             {/* Language Switcher */}
@@ -229,9 +335,10 @@ const App: React.FC = () => {
                 type="text"
                 placeholder={t.searchPlaceholder}
                 className="block w-full rounded-full border-2 border-sky-300 bg-candy-800/80 py-2 pl-10 pr-4 text-sm text-candy-ink placeholder-pink-300 focus:border-pink-400 focus:outline-none focus:ring-4 focus:ring-pink-300/40 transition-all"
-                value={filters.search}
-                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
               />
+              {clearButton}
             </div>
         </div>
       </header>
@@ -258,7 +365,7 @@ const App: React.FC = () => {
                 <AnimeCardSkeleton key={i} />
               ))}
             </div>
-          ) : error && animeList.length === 0 ? (
+          ) : loadFailed && animeList.length === 0 ? (
             /* Error State */
             <div className="flex h-[60vh] flex-col items-center justify-center rounded-[2rem] border-2 border-dashed border-pink-300 bg-pink-100/60 text-center p-8 animate-in zoom-in-95 duration-300">
               <div className="rounded-full bg-pink-200 p-4 mb-4">
@@ -295,6 +402,10 @@ const App: React.FC = () => {
                     <option value="default" className="bg-candy-800">{t.sortDefault}</option>
                     <option value="score" className="bg-candy-800">{t.sortScore}</option>
                     <option value="popularity" className="bg-candy-800">{t.sortPopularity}</option>
+                    <option value="members" className="bg-candy-800">{t.sortMembers}</option>
+                    <option value="date" className="bg-candy-800">{t.sortDate}</option>
+                    <option value="episodes" className="bg-candy-800">{t.sortEpisodes}</option>
+                    <option value="title" className="bg-candy-800">{t.sortTitle}</option>
                   </select>
                 </div>
               </div>
@@ -315,41 +426,41 @@ const App: React.FC = () => {
                     ))}
                   </div>
                   
-                  {/* Load More Button */}
-                  {hasNextPage && !filters.search && !filters.source && !filters.genre && !filters.favoritesOnly && (
+                  {/* Infinite scroll sentinel */}
+                  {hasNextPage && loadFailed && (
                     <div className="flex justify-center pt-8 pb-4">
                       <button
-                        onClick={handleLoadMore}
-                        disabled={isLoadingMore}
-                        className="group relative px-8 py-3 bg-candy-800 hover:bg-candy-700 text-white font-semibold rounded-full border-2 border-pink-300/50 hover:border-candy-accent hover:-translate-y-1 transition-all shadow-lg shadow-pink-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={() => fetchAnime(page + 1)}
+                        className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-500 text-white rounded-3xl font-semibold shadow-lg shadow-red-600/20 transition-all active:scale-95"
                       >
-                        {isLoadingMore ? (
-                          <div className="flex items-center gap-2">
-                            <Loader2 className="w-5 h-5 animate-spin text-candy-accent" />
-                            <span>{t.loadingMore}</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <span>{t.loadMore}</span>
-                            <ChevronDown className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
-                          </div>
-                        )}
-                        <div className="absolute inset-0 rounded-full ring-2 ring-white/10 group-hover:ring-candy-accent/50 transition-all" />
+                        <RefreshCcw className="w-4 h-4" />
+                        {t.retry}
                       </button>
                     </div>
                   )}
-                  
-                  {(!hasNextPage || filters.favoritesOnly) && (
-                    <div className="text-center text-pink-200/70 text-sm py-8 border-t-2 border-dashed border-pink-300/30 mt-8">
+
+                  {hasNextPage && !loadFailed && (
+                    <div ref={sentinelRef} className="flex justify-center pt-8 pb-4 min-h-[3rem]">
+                      {isLoadingMore && (
+                        <div className="flex items-center gap-2 text-candy-soft">
+                          <Loader2 className="w-5 h-5 animate-spin text-candy-accent" />
+                          <span>{t.loadingMore}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {!hasNextPage && (
+                    <div className="text-center text-candy-soft text-sm py-8 border-t-2 border-dashed border-pink-300/30 mt-8">
                       {t.noMoreResults}
                     </div>
                   )}
                 </div>
               ) : (
                 <div className="flex h-64 flex-col items-center justify-center rounded-3xl border border-dashed border-candy-700 text-center">
-                  <p className="text-gray-500">{t.noResults}</p>
+                  <p className="text-candy-soft">{t.noResults}</p>
                   <button 
-                    onClick={() => setFilters({ source: null, genre: null, search: '', favoritesOnly: false })}
+                    onClick={() => setFilters({ source: null, genres: [], search: '', favoritesOnly: false })}
                     className="mt-2 text-candy-accent hover:underline"
                   >
                     {t.clearFilters}

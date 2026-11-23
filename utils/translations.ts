@@ -35,7 +35,11 @@ export const dictionaries: Record<'en' | 'zh', Translations> = {
     sortDefault: "Default",
     sortScore: "Highest Score",
     sortPopularity: "Most Popular",
-    sortMembers: "Most Members"
+    sortMembers: "Most Members",
+    sortDate: "Newest Airing",
+    sortEpisodes: "Most Episodes",
+    sortTitle: "Title (A-Z)",
+    clearSearch: "Clear search"
   },
   zh: {
     season: "2026 冬季",
@@ -71,6 +75,10 @@ export const dictionaries: Record<'en' | 'zh', Translations> = {
     sortDefault: "預設",
     sortScore: "最高評分",
     sortPopularity: "最高人氣",
-    sortMembers: "最多成員"
+    sortMembers: "最多成員",
+    sortDate: "最新播出",
+    sortEpisodes: "集數最多",
+    sortTitle: "名稱 (A-Z)",
+    clearSearch: "清除搜尋"
   }
 };

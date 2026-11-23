@@ -47,6 +47,7 @@ export interface Anime {
   favorites: number;
   synopsis: string | null;
   background: string | null;
+  aired?: { from: string | null; to: string | null };
   season: string | null;
   year: number | null;
   genres: JikanGenre[];
@@ -72,11 +73,11 @@ export interface JikanResponse {
 }
 
 export type FilterType = 'source' | 'genre';
-export type SortOption = 'default' | 'score' | 'popularity' | 'members';
+export type SortOption = 'default' | 'score' | 'popularity' | 'members' | 'date' | 'episodes' | 'title';
 
 export interface FilterState {
   source: string | null;
-  genre: number | null; // using mal_id
+  genres: number[]; // mal_ids; an anime must match all selected genres
   search: string;
   favoritesOnly: boolean;
 }
@@ -116,4 +117,8 @@ export interface Translations {
   sortScore: string;
   sortPopularity: string;
   sortMembers: string;
+  sortDate: string;
+  sortEpisodes: string;
+  sortTitle: string;
+  clearSearch: string;
 }
