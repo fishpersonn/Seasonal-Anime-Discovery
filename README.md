@@ -1,7 +1,9 @@
-# Winter 2026 Anime Discovery (2026 冬季新番探索)
+# Winter 2026 Anime Discovery (2026 冬季新番探索) ✨
 
-![Project Status](https://img.shields.io/badge/status-active-success.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![React](https://img.shields.io/badge/React-18-61dafb.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178c6.svg)
+![Vite](https://img.shields.io/badge/Vite-6-646cff.svg)
+![Data](https://img.shields.io/badge/data-AniList-02a9ff.svg)
 
 [English](#english) | [中文說明](#chinese)
 
@@ -11,54 +13,76 @@
 ## 🇬🇧 English
 
 ### Introduction
-**Winter 2026 Anime Discovery** is a modern, responsive web application designed to help anime enthusiasts explore upcoming titles for the Winter 2026 season. Built with performance and user experience in mind, it utilizes the Jikan API (Unofficial MyAnimeList API) to provide real-time data, dynamic filtering, and a seamless "Netflix-style" browsing experience.
+**Winter 2026 Anime Discovery** is a cute, responsive web app for browsing every anime airing in the Winter 2026 season. It pulls live data from the [AniList](https://anilist.co) GraphQL API and lets you search, filter, sort and favorite titles, then open a detail view with the synopsis and trailer. It has a bright rainbow-candy theme with falling petals, and works in English and Traditional Chinese.
 
-### Key Features
-*   ** Real-time Data:** Fetches the latest anime schedule directly from Jikan API v4.
-*   ** Dynamic Filtering:** Automatically generates filter categories based on the fetched data (Source, Genre) with item counts.
-*   ** Favorites System:** "Like" your favorite anime to save them to a local watchlist (persisted via LocalStorage).
-*   ** Sorting Options:** Sort anime by Score, Popularity (Members), or Default relevance.
-*   ** Responsive Design:** Fully adaptive layout that works perfectly on mobile (1 column) to desktop (5 columns).
-*   ** Immersive Details:** Click any card to open a modal with high-res cover art, synopsis, statistics, and embedded YouTube trailers.
-*   ** Bilingual Support:** Instant toggle between English and Traditional Chinese interfaces.
+### Features
+*   **Live data:** Fetches the Winter 2026 lineup from the AniList API, ordered by popularity.
+*   **Infinite scroll:** Pages load automatically as you scroll. Filters work over the whole season, because the remaining pages keep loading in the background.
+*   **Search:** Debounced title search (matches English and romaji titles).
+*   **Filters:** Source (manga, original, light novel, ...) and **multi-select genres**, with item counts. Choosing several genres shows titles that match *all* of them.
+*   **Sorting:** Default, score, popularity rank, members, release date, episode count, or title.
+*   **Shareable URLs:** Search, filters, genres, favorites-only and sort are stored in the URL (`?q=&source=&genre=&sort=&fav=1`), so you can bookmark or share a view and it survives a reload.
+*   **Favorites:** Heart any anime to keep it in a watchlist. It is saved in your browser's `localStorage`, and there is a "favorites only" filter.
+*   **Detail modal:** Large cover art, synopsis, stats and an embedded YouTube trailer when one is available.
+*   **Bilingual UI:** Switch between English and Traditional Chinese. The choice is remembered, and the first visit follows your browser language. Genre, source and type labels are translated too.
+*   **Resilient loading:** Request timeout with automatic retry, a manual retry button, skeleton placeholders, and a 30-minute `sessionStorage` cache to avoid repeat requests.
+*   **Responsive:** 1 column on phones up to 5 columns on large screens, with a slide-out filter sidebar on mobile.
 
 ### Tech Stack
-*   **Framework:** React 18 (Client Side Rendering)
+*   **Framework:** React 18 (client-side rendering)
 *   **Language:** TypeScript
-*   **Styling:** Tailwind CSS (Dark Mode / Cyberpunk Aesthetic)
+*   **Build tool:** Vite
+*   **Styling:** Tailwind CSS (via CDN) + animate.css
 *   **Icons:** Lucide React
-*   **API:** Jikan API v4
-*   **Build Tool:** Vite (Recommended for deployment)
+*   **Data:** [AniList GraphQL API](https://anilist.gitbook.io/anilist-apiv2-docs/) (no API key needed)
 
 ### Getting Started
 
+**Requirements:** [Node.js](https://nodejs.org) 18 or newer.
+
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/yourusername/winter-2026-anime.git
-    cd winter-2026-anime
+    git clone https://github.com/fishpersonn/Winter-2026-Anime-Discovery.git
+    cd Winter-2026-Anime-Discovery
     ```
 
 2.  **Install dependencies**
     ```bash
     npm install
-    # or
-    yarn install
     ```
 
-3.  **Run the development server**
+3.  **Start the dev server**
     ```bash
     npm run dev
     ```
 
-4.  **Open your browser**
-    Navigate to `http://localhost:5173` to view the app.
+4.  **Open your browser** at `http://localhost:3000`.
 
-### Deployment (Vercel)
-This project is optimized for deployment on [Vercel](https://vercel.com).
-1.  Push your code to a GitHub repository.
-2.  Import the project in Vercel.
-3.  Vercel will detect the Vite/React settings automatically.
-4.  Click **Deploy**.
+### Scripts
+
+| Command           | Description                          |
+| ----------------- | ------------------------------------ |
+| `npm run dev`     | Start the dev server (port 3000)     |
+| `npm run build`   | Build for production into `dist/`    |
+| `npm run preview` | Preview the production build locally |
+
+### Project Structure
+```
+├── App.tsx                  # Main app: state, URL sync, filtering, sorting, infinite scroll
+├── index.tsx / index.html   # Entry point, Tailwind config and fonts
+├── types.ts                 # Shared TypeScript types
+├── services/
+│   └── jikanService.ts      # AniList fetching, mapping, retry and cache
+│                            # (file name kept from the old Jikan source)
+├── components/              # AnimeCard, AnimeModal, FilterSidebar, Toast, skeleton, petals
+└── utils/
+    ├── translations.ts      # English / Traditional Chinese UI strings
+    ├── labels.ts            # Localized genre, source and type labels
+    └── candyColors.ts       # Theme colors
+```
+
+### Disclaimer
+Anime data is provided by [AniList](https://anilist.co). This project is a fan-made app and is not affiliated with AniList or any anime studio. All cover art, trailers and synopses belong to their respective owners.
 
 ---
 
@@ -66,38 +90,42 @@ This project is optimized for deployment on [Vercel](https://vercel.com).
 ## 🇹🇼 中文說明
 
 ### 專案簡介
-**2026 冬季新番探索** 是一個現代化、響應式的網頁應用程式，專為動畫愛好者設計。它利用 Jikan API (非官方 MyAnimeList API) 提供 2026 年冬季的最新動畫資訊。專案採用「Cyberpunk」深色風格，提供類似 Netflix 的流暢瀏覽體驗。
+**2026 冬季新番探索** 是一個可愛風格、響應式的網頁應用程式，讓你輕鬆瀏覽 2026 年冬季播出的所有動畫。資料即時來自 [AniList](https://anilist.co) GraphQL API，可搜尋、篩選、排序與收藏作品，點開卡片還能看到劇情簡介和預告片。介面採用明亮的彩虹糖果配色與飄落花瓣特效，支援英文與繁體中文。
 
-### 核心功能
-*   ** 即時數據**：直接從 Jikan API v4 獲取最新的動畫列表。
-*   ** 動態篩選系統**：根據回傳的資料自動生成篩選類別（按來源、按類型），並顯示各類別的數量。
-*   ** 收藏功能**：點擊愛心即可將動畫加入「我的收藏」，資料儲存在瀏覽器 LocalStorage 中，關閉視窗後依然保留。
-*   ** 排序功能**：支援按「評分」、「人氣（成員數）」或「預設」順序排列動畫。
-*   ** 響應式設計**：完美支援從手機（單欄）到大螢幕桌機（五欄）的各種裝置。
-*   ** 沉浸式詳情頁**：點擊卡片開啟詳細視窗，包含高畫質封面、劇情簡介、評分統計及 YouTube 預告片播放。
-*   ** 雙語支援**：支援英文與繁體中文介面一鍵切換。
+### 功能特色
+*   **即時資料：** 從 AniList API 取得 2026 冬季新番，預設依人氣排序。
+*   **無限捲動：** 往下捲動自動載入下一頁。篩選條件會作用在整季作品上，因為剩餘頁面會持續在背景載入。
+*   **搜尋：** 標題搜尋（有輸入延遲處理），可比對英文與羅馬拼音標題。
+*   **篩選：** 可依「原作來源」（漫畫、原創、輕小說…）與 **多選類型** 篩選並顯示數量。選擇多個類型時，只會顯示同時符合全部類型的作品。
+*   **排序：** 預設、評分、人氣排名、成員數、開播日期、集數、標題。
+*   **可分享的網址：** 搜尋、篩選、類型、僅看收藏與排序都會記錄在網址（`?q=&source=&genre=&sort=&fav=1`），可以加入書籤或分享給朋友，重新整理後也會保留。
+*   **收藏功能：** 點擊愛心加入收藏，資料儲存在瀏覽器 `localStorage`，並提供「只看收藏」篩選。
+*   **詳情視窗：** 高畫質封面、劇情簡介、統計資料，有預告片時可直接內嵌播放 YouTube。
+*   **雙語介面：** 可切換英文／繁體中文，會記住你的選擇，首次進入則依瀏覽器語言決定。類型、來源、播出形式等標籤也已翻譯。
+*   **穩定的載入機制：** 請求逾時自動重試、手動重試按鈕、骨架載入畫面，並使用 `sessionStorage` 快取 30 分鐘以減少重複請求。
+*   **響應式設計：** 手機單欄到大螢幕五欄，手機版提供側滑篩選面板。
 
 ### 技術堆疊
-*   **框架**: React 18 (CSR)
-*   **語言**: TypeScript
-*   **樣式**: Tailwind CSS (深色模式 / 賽博龐克風格)
-*   **圖標**: Lucide React
-*   **資料來源**: Jikan API v4
-*   **建置工具**: Vite (建議使用此工具進行部署)
+*   **框架：** React 18（CSR）
+*   **語言：** TypeScript
+*   **建置工具：** Vite
+*   **樣式：** Tailwind CSS（CDN）+ animate.css
+*   **圖示：** Lucide React
+*   **資料來源：** [AniList GraphQL API](https://anilist.gitbook.io/anilist-apiv2-docs/)（不需要 API Key）
 
 ### 安裝與執行
 
+**環境需求：** [Node.js](https://nodejs.org) 18 以上。
+
 1.  **複製專案**
     ```bash
-    git clone https://github.com/yourusername/winter-2026-anime.git
-    cd winter-2026-anime
+    git clone https://github.com/fishpersonn/Winter-2026-Anime-Discovery.git
+    cd Winter-2026-Anime-Discovery
     ```
 
 2.  **安裝套件**
     ```bash
     npm install
-    # 或
-    yarn install
     ```
 
 3.  **啟動開發伺服器**
@@ -105,18 +133,30 @@ This project is optimized for deployment on [Vercel](https://vercel.com).
     npm run dev
     ```
 
-4.  **開啟瀏覽器**
-    前往 `http://localhost:5173` 查看應用程式。
+4.  **開啟瀏覽器** 前往 `http://localhost:3000`。
 
-### 部署指南 (Vercel)
-本專案非常適合部署於 [Vercel](https://vercel.com)。
-1.  將程式碼上傳至 GitHub。
-2.  在 Vercel 後台匯入該 Repository。
-3.  Vercel 會自動偵測 Vite/React 設定。
-4.  點擊 **Deploy** 即可上線，這通常也能解決 YouTube 播放器的跨域問題 (Error 153)。
+### 指令
 
----
+| 指令              | 說明                         |
+| ----------------- | ---------------------------- |
+| `npm run dev`     | 啟動開發伺服器（連接埠 3000）|
+| `npm run build`   | 建置正式版至 `dist/`         |
+| `npm run preview` | 在本機預覽正式版             |
 
-### Disclaimer
-This project uses the Jikan API, which is an open-source API for MyAnimeList. It is not affiliated with MyAnimeList.net.
-本專案使用 Jikan API，這是 MyAnimeList 的開源 API。本專案與 MyAnimeList.net 無附屬關係。
+### 專案結構
+```
+├── App.tsx                  # 主程式：狀態、網址同步、篩選、排序、無限捲動
+├── index.tsx / index.html   # 進入點、Tailwind 設定與字型
+├── types.ts                 # 共用型別
+├── services/
+│   └── jikanService.ts      # AniList 資料請求、轉換、重試與快取
+│                            # （檔名沿用舊的 Jikan 資料來源）
+├── components/              # 動畫卡片、詳情視窗、篩選側欄、提示訊息、骨架畫面、花瓣
+└── utils/
+    ├── translations.ts      # 英文／繁體中文介面文字
+    ├── labels.ts            # 類型、來源、形式的在地化標籤
+    └── candyColors.ts       # 主題色彩
+```
+
+### 免責聲明
+動畫資料由 [AniList](https://anilist.co) 提供。本專案為粉絲自製作品，與 AniList 及任何動畫公司無關。所有封面圖片、預告片與劇情簡介版權皆屬原權利人所有。
