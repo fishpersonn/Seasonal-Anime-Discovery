@@ -14,7 +14,7 @@ const FallingPetals: React.FC<{ count?: number }> = ({ count = 22 }) => {
         duration: 12 + Math.random() * 14,
         delay: -Math.random() * 20,
         drift: (Math.random() - 0.5) * 120,
-        pink: i % 2 === 0,
+        color: ['#ff8fc0', '#7dd3fc', '#fcd34d', '#6ee7b7'][i % 4],
       })),
     [count]
   );
@@ -31,7 +31,7 @@ const FallingPetals: React.FC<{ count?: number }> = ({ count = 22 }) => {
               fontSize: `${p.size}px`,
               animationDuration: `${p.duration}s`,
               animationDelay: `${p.delay}s`,
-              color: p.pink ? '#ffb3d9' : '#bfe7ff',
+              color: p.color,
               '--drift': `${p.drift}px`,
             } as React.CSSProperties
           }

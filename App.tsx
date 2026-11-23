@@ -160,7 +160,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans text-pink-50">
+    <div className="min-h-screen flex flex-col font-sans text-candy-ink">
       <FallingPetals />
       
       {/* Toast Notification */}
@@ -172,13 +172,13 @@ const App: React.FC = () => {
       )}
 
       {/* Header */}
-      <header className="sticky top-0 z-30 w-full border-b-2 border-dashed border-pink-300/40 bg-candy-900/70 backdrop-blur-md rounded-b-[2rem]">
+      <header className="sticky top-0 z-30 w-full border-b-4 border-dashed border-yellow-300 bg-white/70 backdrop-blur-md rounded-b-[2rem]">
         <div className="mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
           
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsSidebarOpen(true)}
-              className="p-2 text-gray-400 hover:text-white md:hidden"
+              className="p-2 text-candy-soft hover:text-candy-accent md:hidden"
             >
               <Menu className="h-6 w-6" />
             </button>
@@ -188,7 +188,7 @@ const App: React.FC = () => {
                 <h1 className="sparkle-title text-xl font-bold tracking-tight sm:text-3xl">
                   {t.season} ✨
                 </h1>
-                <p className="hidden text-xs text-pink-200/80 sm:block">{t.subtitle} ♡</p>
+                <p className="hidden text-xs text-candy-soft sm:block">{t.subtitle} ♡</p>
               </div>
             </div>
           </div>
@@ -197,12 +197,12 @@ const App: React.FC = () => {
              {/* Search Bar */}
              <div className="relative w-full max-w-md hidden sm:block ml-8">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <Search className="h-4 w-4 text-pink-300" />
+                <Search className="h-4 w-4 text-sky-500" />
               </div>
               <input
                 type="text"
                 placeholder={t.searchPlaceholder}
-                className="block w-full rounded-full border-2 border-pink-300/40 bg-candy-800/80 py-2 pl-10 pr-4 text-sm text-white placeholder-pink-200/50 focus:border-candy-accent focus:outline-none focus:ring-4 focus:ring-pink-400/30 transition-all"
+                className="block w-full rounded-full border-2 border-sky-300 bg-candy-800/80 py-2 pl-10 pr-4 text-sm text-candy-ink placeholder-pink-300 focus:border-pink-400 focus:outline-none focus:ring-4 focus:ring-pink-300/40 transition-all"
                 value={filters.search}
                 onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
               />
@@ -223,12 +223,12 @@ const App: React.FC = () => {
         <div className="sm:hidden px-4 pb-4">
            <div className="relative w-full">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <Search className="h-4 w-4 text-pink-300" />
+                <Search className="h-4 w-4 text-sky-500" />
               </div>
               <input
                 type="text"
                 placeholder={t.searchPlaceholder}
-                className="block w-full rounded-full border-2 border-pink-300/40 bg-candy-800/80 py-2 pl-10 pr-4 text-sm text-white placeholder-pink-200/50 focus:border-candy-accent focus:outline-none focus:ring-4 focus:ring-pink-400/30 transition-all"
+                className="block w-full rounded-full border-2 border-sky-300 bg-candy-800/80 py-2 pl-10 pr-4 text-sm text-candy-ink placeholder-pink-300 focus:border-pink-400 focus:outline-none focus:ring-4 focus:ring-pink-300/40 transition-all"
                 value={filters.search}
                 onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
               />
@@ -260,12 +260,12 @@ const App: React.FC = () => {
             </div>
           ) : error && animeList.length === 0 ? (
             /* Error State */
-            <div className="flex h-[60vh] flex-col items-center justify-center rounded-[2rem] border-2 border-dashed border-red-900/50 bg-red-950/10 text-center p-8 animate-in zoom-in-95 duration-300">
-              <div className="rounded-full bg-red-900/20 p-4 mb-4">
-                <WifiOff className="h-12 w-12 text-red-500" />
+            <div className="flex h-[60vh] flex-col items-center justify-center rounded-[2rem] border-2 border-dashed border-pink-300 bg-pink-100/60 text-center p-8 animate-in zoom-in-95 duration-300">
+              <div className="rounded-full bg-pink-200 p-4 mb-4">
+                <WifiOff className="h-12 w-12 text-pink-500" />
               </div>
-              <h3 className="text-xl font-bold text-red-400 mb-2">哎呀，連線中斷了 (｡•́︿•̀｡)</h3>
-              <p className="text-gray-400 max-w-md mb-8">{t.error}</p>
+              <h3 className="text-xl font-bold text-pink-500 mb-2">哎呀，連線中斷了 (｡•́︿•̀｡)</h3>
+              <p className="text-candy-soft max-w-md mb-8">{t.error}</p>
               <button 
                 onClick={() => fetchAnime(1, true)}
                 className="group flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-500 text-white rounded-3xl font-semibold shadow-lg shadow-red-600/20 transition-all hover:scale-110 hover:-rotate-2 active:scale-95"
@@ -278,19 +278,19 @@ const App: React.FC = () => {
             <>
               {/* Toolbar: Results Count & Sort */}
               <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <h2 className="text-lg font-semibold text-white">
-                  <span className="text-candy-accent text-2xl">{filteredAndSortedAnime.length}</span> {t.foundTitles} 🌸
+                <h2 className="text-lg font-semibold text-candy-ink">
+                  <span className="text-sky-500 text-2xl">{filteredAndSortedAnime.length}</span> {t.foundTitles} 🌸
                 </h2>
 
                 {/* Sort Dropdown */}
                 <div className="flex items-center gap-2 bg-candy-800 p-1 rounded-2xl border border-candy-700">
-                  <div className="px-2 text-gray-400">
+                  <div className="px-2 text-candy-soft">
                     <ListFilter className="w-4 h-4" />
                   </div>
                   <select 
                     value={sortOption}
                     onChange={(e) => setSortOption(e.target.value as SortOption)}
-                    className="bg-transparent text-sm text-white focus:outline-none py-1 pr-2 cursor-pointer"
+                    className="bg-transparent text-sm text-candy-ink focus:outline-none py-1 pr-2 cursor-pointer"
                   >
                     <option value="default" className="bg-candy-800">{t.sortDefault}</option>
                     <option value="score" className="bg-candy-800">{t.sortScore}</option>
@@ -364,7 +364,7 @@ const App: React.FC = () => {
       {/* Scroll to Top Button */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 z-40 p-3 rounded-full bg-gradient-to-br from-pink-400 to-fuchsia-400 text-white shadow-lg shadow-pink-500/40 hover:scale-110 hover:from-pink-300 transition-all duration-300 transform ${
+        className={`fixed bottom-8 right-8 z-40 p-3 rounded-full bg-gradient-to-br from-pink-400 via-yellow-400 to-emerald-400 text-white shadow-lg shadow-pink-400/40 hover:scale-110 hover:brightness-110 transition-all duration-300 transform ${
           showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'
         }`}
       >

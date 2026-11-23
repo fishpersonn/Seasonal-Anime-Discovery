@@ -69,12 +69,14 @@
             },
             colors: {
               candy: {
-                900: '#2a1a40',
-                800: '#3d2760',
-                700: '#5b3d8a',
-                600: '#7352a8',
-                accent: '#ff7eb6',
-                highlight: '#ffc2e2'
+                900: '#fff6fb',
+                800: '#ffffff',
+                700: '#ffd3e6',
+                600: '#ffc0da',
+                accent: '#ff6fa8',
+                highlight: '#e0488a',
+                ink: '#5a3a63',
+                soft: '#a07aa6'
               }
             }
           },
@@ -83,18 +85,20 @@
     </script>
     <style>
       body {
-        color: #fff5fb;
-        background-color: #2a1a40;
+        color: #5a3a63;
+        background-color: #fff6fb;
         background-image:
-          radial-gradient(circle at 12% 8%, rgba(255,126,182,.28) 0, transparent 38%),
-          radial-gradient(circle at 88% 18%, rgba(125,211,252,.22) 0, transparent 40%),
-          radial-gradient(circle at 50% 100%, rgba(196,181,253,.25) 0, transparent 45%);
+          radial-gradient(circle at 12% 8%, rgba(255,170,210,.5) 0, transparent 34%),
+          radial-gradient(circle at 80% 70%, rgba(255,236,150,.5) 0, transparent 36%),
+          radial-gradient(circle at 15% 80%, rgba(170,240,200,.5) 0, transparent 36%),
+          radial-gradient(circle at 88% 18%, rgba(160,225,255,.45) 0, transparent 40%),
+          radial-gradient(circle at 50% 100%, rgba(210,195,255,.45) 0, transparent 45%);
         background-attachment: fixed;
       }
       ::selection { background: #ff7eb6; color: #fff; }
       ::-webkit-scrollbar { width: 10px; }
-      ::-webkit-scrollbar-track { background: #2a1a40; }
-      ::-webkit-scrollbar-thumb { background: #ff9ac9; border-radius: 999px; border: 2px solid #2a1a40; }
+      ::-webkit-scrollbar-track { background: #ffeaf4; }
+      ::-webkit-scrollbar-thumb { background: #ff9ac9; border-radius: 999px; border: 2px solid #ffeaf4; }
       ::-webkit-scrollbar-thumb:hover { background: #ff7eb6; }
 
       .petal {
@@ -112,7 +116,7 @@
         100% { transform: translate3d(var(--drift, 40px), 105vh, 0) rotate(360deg); opacity: 0; }
       }
       .sparkle-title {
-        background: linear-gradient(90deg, #ffb3d9, #c4b5fd, #7dd3fc, #ffb3d9);
+        background: linear-gradient(90deg, #ff5fa2, #f5b700, #22c997, #38a8f8, #ff5fa2);
         background-size: 250% 100%;
         -webkit-background-clip: text; background-clip: text;
         color: transparent;
