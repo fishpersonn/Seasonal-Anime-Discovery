@@ -50,8 +50,8 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-candy-900 rounded-[2rem] border-4 border-sky-300 shadow-2xl shadow-sky-400/30 animate-in fade-in zoom-in-95 duration-200">
-        
+      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-hidden bg-candy-900 rounded-[2rem] border-4 border-sky-300 shadow-2xl shadow-sky-400/30 animate-in fade-in zoom-in-95 duration-200">
+
         {/* Close Button */}
         <button 
           onClick={onClose}
@@ -60,6 +60,8 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
           <X className="w-6 h-6" />
         </button>
 
+        {/* Scroll container (inside the rounded clip so the scrollbar stays within the border) */}
+        <div className="max-h-[calc(90vh-8px)] overflow-y-auto custom-scrollbar">
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3">
           
@@ -128,7 +130,7 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-emerald-100 text-emerald-700 border-2 border-emerald-300">
                 <Calendar className="w-4 h-4 text-emerald-500" />
-                <span>{anime.year || 2026}</span>
+                <span>{anime.year || new Date().getFullYear()}</span>
               </div>
             </div>
 
@@ -211,6 +213,7 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
             </div>
 
           </div>
+        </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-# Winter 2026 Anime Discovery (2026 冬季新番探索) ✨
+# Seasonal Anime Discovery (當季新番探索) ✨
 
 ![React](https://img.shields.io/badge/React-18-61dafb.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178c6.svg)
@@ -13,10 +13,10 @@
 ## 🇬🇧 English
 
 ### Introduction
-**Winter 2026 Anime Discovery** is a cute, responsive web app for browsing every anime airing in the Winter 2026 season. It pulls live data from the [AniList](https://anilist.co) GraphQL API and lets you search, filter, sort and favorite titles, then open a detail view with the synopsis and trailer. It has a bright rainbow-candy theme with falling petals, and works in English and Traditional Chinese.
+**Seasonal Anime Discovery** is a cute, responsive web app for browsing every anime airing in the current season (it picks Winter, Spring, Summer or Fall automatically from today's date). It pulls live data from the [AniList](https://anilist.co) GraphQL API and lets you search, filter, sort and favorite titles, then open a detail view with the synopsis and trailer. It has a bright rainbow-candy theme with falling petals, and works in English and Traditional Chinese.
 
 ### Features
-*   **Live data:** Fetches the Winter 2026 lineup from the AniList API, ordered by popularity.
+*   **Live data:** Fetches the current season's lineup from the AniList API, ordered by popularity.
 *   **Infinite scroll:** Pages load automatically as you scroll. Filters work over the whole season, because the remaining pages keep loading in the background.
 *   **Search:** Debounced title search (matches English and romaji titles).
 *   **Filters:** Source (manga, original, light novel, ...) and **multi-select genres**, with item counts. Choosing several genres shows titles that match *all* of them.
@@ -42,8 +42,8 @@
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/fishpersonn/Winter-2026-Anime-Discovery.git
-    cd Winter-2026-Anime-Discovery
+    git clone https://github.com/fishpersonn/Seasonal-Anime-Discovery.git
+    cd Seasonal-Anime-Discovery
     ```
 
 2.  **Install dependencies**
@@ -90,10 +90,10 @@ Anime data is provided by [AniList](https://anilist.co). This project is a fan-m
 ## 🇹🇼 中文說明
 
 ### 專案簡介
-**2026 冬季新番探索** 是一個可愛風格、響應式的網頁應用程式，讓你輕鬆瀏覽 2026 年冬季播出的所有動畫。資料即時來自 [AniList](https://anilist.co) GraphQL API，可搜尋、篩選、排序與收藏作品，點開卡片還能看到劇情簡介和預告片。介面採用明亮的彩虹糖果配色與飄落花瓣特效，支援英文與繁體中文。
+**當季新番探索** 是一個可愛風格、響應式的網頁應用程式，讓你輕鬆瀏覽當季播出的所有動畫（會依今天日期自動選擇冬、春、夏、秋季）。資料即時來自 [AniList](https://anilist.co) GraphQL API，可搜尋、篩選、排序與收藏作品，點開卡片還能看到劇情簡介和預告片。介面採用明亮的彩虹糖果配色與飄落花瓣特效，支援英文與繁體中文。
 
 ### 功能特色
-*   **即時資料：** 從 AniList API 取得 2026 冬季新番，預設依人氣排序。
+*   **即時資料：** 從 AniList API 取得當季新番，預設依人氣排序。
 *   **無限捲動：** 往下捲動自動載入下一頁。篩選條件會作用在整季作品上，因為剩餘頁面會持續在背景載入。
 *   **搜尋：** 標題搜尋（有輸入延遲處理），可比對英文與羅馬拼音標題。
 *   **篩選：** 可依「原作來源」（漫畫、原創、輕小說…）與 **多選類型** 篩選並顯示數量。選擇多個類型時，只會顯示同時符合全部類型的作品。
@@ -119,8 +119,8 @@ Anime data is provided by [AniList](https://anilist.co). This project is a fan-m
 
 1.  **複製專案**
     ```bash
-    git clone https://github.com/fishpersonn/Winter-2026-Anime-Discovery.git
-    cd Winter-2026-Anime-Discovery
+    git clone https://github.com/fishpersonn/Seasonal-Anime-Discovery.git
+    cd Seasonal-Anime-Discovery
     ```
 
 2.  **安裝套件**

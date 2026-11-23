@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { fetchWinter2026AnimePage } from './services/jikanService';
+import { fetchSeasonAnimePage } from './services/jikanService';
 import { Anime, FilterState, SortOption } from './types';
 import AnimeCard from './components/AnimeCard';
 import AnimeCardSkeleton from './components/AnimeCardSkeleton';
@@ -8,7 +8,8 @@ import AnimeModal from './components/AnimeModal';
 import Toast from './components/Toast';
 import FallingPetals from './components/FallingPetals';
 import { dictionaries } from './utils/translations';
-import { Search, Menu, Snowflake, Globe, RefreshCcw, WifiOff, ArrowUp, Loader2, ListFilter, X } from 'lucide-react';
+import { getCurrentSeason, seasonLabel } from './utils/season';
+import { Search, Menu, Flower2, Globe, RefreshCcw, WifiOff, ArrowUp, Loader2, ListFilter, X } from 'lucide-react';
 
 type Lang = 'en' | 'zh';
 
@@ -79,7 +80,14 @@ const App: React.FC = () => {
 
   // Language State
   const [language, setLanguage] = useState<Lang>(detectLanguage);
-  const t = dictionaries[language];
+  const t = useMemo(
+    () => ({ ...dictionaries[language], season: seasonLabel(language, getCurrentSeason()) }),
+    [language]
+  );
+
+  useEffect(() => {
+    document.title = `${t.season} ${t.subtitle} | Anime Discovery`;
+  }, [t]);
 
   // Filters & Sort State
   const [initialUrlState] = useState(readUrlState);
@@ -175,7 +183,7 @@ const App: React.FC = () => {
       setError(null);
       setLoadFailed(false);
 
-      const { data, pagination } = await fetchWinter2026AnimePage(pageNum);
+      const { data, pagination } = await fetchSeasonAnimePage(pageNum);
       
       setAnimeList(prev => isReset ? data : [...prev, ...data]);
       setHasNextPage(pagination.has_next_page);
@@ -288,7 +296,7 @@ const App: React.FC = () => {
               <Menu className="h-6 w-6" />
             </button>
             <div className="flex items-center gap-2 cursor-pointer" onClick={scrollToTop}>
-              <Snowflake className="h-8 w-8 text-candy-accent animate__animated animate__swing animate__infinite animate__slower drop-shadow-[0_0_8px_#ff7eb6]" />
+              <Flower2 className="h-8 w-8 text-candy-accent animate__animated animate__swing animate__infinite animate__slower drop-shadow-[0_0_8px_#ff7eb6]" />
               <div>
                 <h1 className="sparkle-title text-xl font-bold tracking-tight sm:text-3xl">
                   {t.season} ✨

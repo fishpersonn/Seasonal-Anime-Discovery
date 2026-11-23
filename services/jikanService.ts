@@ -1,4 +1,5 @@
 import { Anime, JikanGenre, Pagination } from '../types';
+import { getCurrentSeason } from '../utils/season';
 
 // Data source: AniList GraphQL API (https://graphql.anilist.co).
 // File name is kept (jikanService) so existing imports keep working; the data is
@@ -16,10 +17,10 @@ const MAX_RETRIES = 1;
 class RetryableError extends Error {}
 
 const QUERY = `
-query ($page: Int, $perPage: Int) {
+query ($page: Int, $perPage: Int, $season: MediaSeason, $seasonYear: Int) {
   Page(page: $page, perPage: $perPage) {
     pageInfo { currentPage hasNextPage lastPage perPage }
-    media(season: WINTER, seasonYear: 2026, type: ANIME, sort: POPULARITY_DESC) {
+    media(season: $season, seasonYear: $seasonYear, type: ANIME, sort: POPULARITY_DESC) {
       id
       idMal
       siteUrl
@@ -35,6 +36,7 @@ query ($page: Int, $perPage: Int) {
       popularity
       favourites
       description(asHtml: false)
+      season
       seasonYear
       startDate { year month day }
       endDate { year month day }
@@ -63,6 +65,7 @@ interface AniListMedia {
   popularity: number | null;
   favourites: number | null;
   description: string | null;
+  season: string | null;
   seasonYear: number | null;
   startDate: AniListDate;
   endDate: AniListDate;
@@ -185,7 +188,7 @@ const mapMedia = (m: AniListMedia, rank: number): Anime => {
     synopsis: stripHtml(m.description),
     background: null,
     aired: { from: toIsoDate(m.startDate), to: toIsoDate(m.endDate) },
-    season: 'winter',
+    season: m.season ? m.season.toLowerCase() : null,
     year: m.seasonYear,
     genres,
     explicit_genres: [],
@@ -212,7 +215,8 @@ const fetchWithTimeout = async (url: string, init: RequestInit): Promise<Respons
 };
 
 // --- sessionStorage cache -------------------------------------------------
-const CACHE_PREFIX = 'anilist:winter2026:page:';
+const CURRENT = getCurrentSeason();
+const CACHE_PREFIX = `anilist:${CURRENT.season.toLowerCase()}${CURRENT.year}:page:`;
 const CACHE_TTL_MS = 30 * 60 * 1000;
 
 type PageResult = { data: Anime[]; pagination: Pagination };
@@ -240,7 +244,7 @@ const writeCache = (page: number, result: PageResult) => {
   }
 };
 
-export const fetchWinter2026AnimePage = async (page: number = 1): Promise<PageResult> => {
+export const fetchSeasonAnimePage = async (page: number = 1): Promise<PageResult> => {
   const cached = readCache(page);
   if (cached) return cached;
 
@@ -254,7 +258,7 @@ export const fetchWinter2026AnimePage = async (page: number = 1): Promise<PageRe
       const response = await fetchWithTimeout(ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ query: QUERY, variables: { page, perPage: PER_PAGE } }),
+        body: JSON.stringify({ query: QUERY, variables: { page, perPage: PER_PAGE, season: CURRENT.season, seasonYear: CURRENT.year } }),
       });
 
       if (!response.ok) {
@@ -305,7 +309,7 @@ export const fetchWinter2026AnimePage = async (page: number = 1): Promise<PageRe
   throw lastError;
 };
 
-export const fetchWinter2026Anime = async (): Promise<Anime[]> => {
-  const { data } = await fetchWinter2026AnimePage(1);
+export const fetchSeasonAnime = async (): Promise<Anime[]> => {
+  const { data } = await fetchSeasonAnimePage(1);
   return data;
 };
