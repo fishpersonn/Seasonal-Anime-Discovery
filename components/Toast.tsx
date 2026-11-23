@@ -16,8 +16,8 @@ const Toast: React.FC<ToastProps> = ({ message, onClose, duration = 5000 }) => {
   }, [duration, onClose]);
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex max-w-sm items-center gap-3 rounded-lg border border-red-500/50 bg-red-950/90 px-4 py-3 text-red-200 shadow-xl backdrop-blur-md animate-in slide-in-from-right-full fade-in duration-300">
-      <AlertCircle className="h-5 w-5 shrink-0 text-red-500" />
+    <div className="fixed bottom-4 right-4 z-50 flex max-w-sm items-center gap-3 rounded-2xl border-2 border-pink-300 bg-candy-800/95 px-4 py-3 text-pink-100 shadow-xl backdrop-blur-md animate-in slide-in-from-right-full fade-in duration-300">
+      <AlertCircle className="h-5 w-5 shrink-0 text-pink-400" />
       <p className="text-sm font-medium">{message}</p>
       <button 
         onClick={onClose} 

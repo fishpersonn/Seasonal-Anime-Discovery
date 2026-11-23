@@ -6,6 +6,7 @@ import AnimeCardSkeleton from './components/AnimeCardSkeleton';
 import FilterSidebar from './components/FilterSidebar';
 import AnimeModal from './components/AnimeModal';
 import Toast from './components/Toast';
+import FallingPetals from './components/FallingPetals';
 import { dictionaries } from './utils/translations';
 import { Search, Menu, Snowflake, Globe, RefreshCcw, WifiOff, ArrowUp, ChevronDown, Loader2, ListFilter } from 'lucide-react';
 
@@ -159,7 +160,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-cyber-900 flex flex-col font-sans text-gray-100">
+    <div className="min-h-screen flex flex-col font-sans text-pink-50">
+      <FallingPetals />
       
       {/* Toast Notification */}
       {error && (
@@ -170,7 +172,7 @@ const App: React.FC = () => {
       )}
 
       {/* Header */}
-      <header className="sticky top-0 z-30 w-full border-b border-cyber-700 bg-cyber-900/80 backdrop-blur-md">
+      <header className="sticky top-0 z-30 w-full border-b-2 border-dashed border-pink-300/40 bg-candy-900/70 backdrop-blur-md rounded-b-[2rem]">
         <div className="mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
           
           <div className="flex items-center gap-4">
@@ -181,12 +183,12 @@ const App: React.FC = () => {
               <Menu className="h-6 w-6" />
             </button>
             <div className="flex items-center gap-2 cursor-pointer" onClick={scrollToTop}>
-              <Snowflake className="h-8 w-8 text-cyber-accent animate-pulse" />
+              <Snowflake className="h-8 w-8 text-candy-accent animate__animated animate__swing animate__infinite animate__slower drop-shadow-[0_0_8px_#ff7eb6]" />
               <div>
-                <h1 className="text-xl font-bold tracking-tight text-white sm:text-2xl">
-                  {t.season}
+                <h1 className="sparkle-title text-xl font-bold tracking-tight sm:text-3xl">
+                  {t.season} ✨
                 </h1>
-                <p className="hidden text-xs text-gray-400 sm:block">{t.subtitle}</p>
+                <p className="hidden text-xs text-pink-200/80 sm:block">{t.subtitle} ♡</p>
               </div>
             </div>
           </div>
@@ -195,12 +197,12 @@ const App: React.FC = () => {
              {/* Search Bar */}
              <div className="relative w-full max-w-md hidden sm:block ml-8">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <Search className="h-4 w-4 text-gray-500" />
+                <Search className="h-4 w-4 text-pink-300" />
               </div>
               <input
                 type="text"
                 placeholder={t.searchPlaceholder}
-                className="block w-full rounded-full border border-cyber-700 bg-cyber-800 py-2 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:border-cyber-accent focus:outline-none focus:ring-1 focus:ring-cyber-accent transition-all"
+                className="block w-full rounded-full border-2 border-pink-300/40 bg-candy-800/80 py-2 pl-10 pr-4 text-sm text-white placeholder-pink-200/50 focus:border-candy-accent focus:outline-none focus:ring-4 focus:ring-pink-400/30 transition-all"
                 value={filters.search}
                 onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
               />
@@ -209,9 +211,9 @@ const App: React.FC = () => {
             {/* Language Switcher */}
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-cyber-800 border border-cyber-700 hover:bg-cyber-700 transition-colors text-sm font-medium"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-candy-800 border border-candy-700 hover:bg-candy-700 transition-colors text-sm font-medium"
             >
-              <Globe className="w-4 h-4 text-cyber-highlight" />
+              <Globe className="w-4 h-4 text-candy-highlight" />
               <span>{language === 'en' ? 'EN' : '中'}</span>
             </button>
           </div>
@@ -221,12 +223,12 @@ const App: React.FC = () => {
         <div className="sm:hidden px-4 pb-4">
            <div className="relative w-full">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <Search className="h-4 w-4 text-gray-500" />
+                <Search className="h-4 w-4 text-pink-300" />
               </div>
               <input
                 type="text"
                 placeholder={t.searchPlaceholder}
-                className="block w-full rounded-full border border-cyber-700 bg-cyber-800 py-2 pl-10 pr-4 text-sm text-white placeholder-gray-500 focus:border-cyber-accent focus:outline-none focus:ring-1 focus:ring-cyber-accent transition-all"
+                className="block w-full rounded-full border-2 border-pink-300/40 bg-candy-800/80 py-2 pl-10 pr-4 text-sm text-white placeholder-pink-200/50 focus:border-candy-accent focus:outline-none focus:ring-4 focus:ring-pink-400/30 transition-all"
                 value={filters.search}
                 onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
               />
@@ -258,15 +260,15 @@ const App: React.FC = () => {
             </div>
           ) : error && animeList.length === 0 ? (
             /* Error State */
-            <div className="flex h-[60vh] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-red-900/50 bg-red-950/10 text-center p-8 animate-in zoom-in-95 duration-300">
+            <div className="flex h-[60vh] flex-col items-center justify-center rounded-[2rem] border-2 border-dashed border-red-900/50 bg-red-950/10 text-center p-8 animate-in zoom-in-95 duration-300">
               <div className="rounded-full bg-red-900/20 p-4 mb-4">
                 <WifiOff className="h-12 w-12 text-red-500" />
               </div>
-              <h3 className="text-xl font-bold text-red-400 mb-2">Connection Interrupted</h3>
+              <h3 className="text-xl font-bold text-red-400 mb-2">哎呀，連線中斷了 (｡•́︿•̀｡)</h3>
               <p className="text-gray-400 max-w-md mb-8">{t.error}</p>
               <button 
                 onClick={() => fetchAnime(1, true)}
-                className="group flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-500 text-white rounded-xl font-semibold shadow-lg shadow-red-600/20 transition-all hover:scale-105 active:scale-95"
+                className="group flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-500 text-white rounded-3xl font-semibold shadow-lg shadow-red-600/20 transition-all hover:scale-110 hover:-rotate-2 active:scale-95"
               >
                 <RefreshCcw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
                 {t.retry}
@@ -277,11 +279,11 @@ const App: React.FC = () => {
               {/* Toolbar: Results Count & Sort */}
               <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <h2 className="text-lg font-semibold text-white">
-                  <span className="text-cyber-accent">{filteredAndSortedAnime.length}</span> {t.foundTitles}
+                  <span className="text-candy-accent text-2xl">{filteredAndSortedAnime.length}</span> {t.foundTitles} 🌸
                 </h2>
 
                 {/* Sort Dropdown */}
-                <div className="flex items-center gap-2 bg-cyber-800 p-1 rounded-lg border border-cyber-700">
+                <div className="flex items-center gap-2 bg-candy-800 p-1 rounded-2xl border border-candy-700">
                   <div className="px-2 text-gray-400">
                     <ListFilter className="w-4 h-4" />
                   </div>
@@ -290,9 +292,9 @@ const App: React.FC = () => {
                     onChange={(e) => setSortOption(e.target.value as SortOption)}
                     className="bg-transparent text-sm text-white focus:outline-none py-1 pr-2 cursor-pointer"
                   >
-                    <option value="default" className="bg-cyber-800">{t.sortDefault}</option>
-                    <option value="score" className="bg-cyber-800">{t.sortScore}</option>
-                    <option value="popularity" className="bg-cyber-800">{t.sortPopularity}</option>
+                    <option value="default" className="bg-candy-800">{t.sortDefault}</option>
+                    <option value="score" className="bg-candy-800">{t.sortScore}</option>
+                    <option value="popularity" className="bg-candy-800">{t.sortPopularity}</option>
                   </select>
                 </div>
               </div>
@@ -319,11 +321,11 @@ const App: React.FC = () => {
                       <button
                         onClick={handleLoadMore}
                         disabled={isLoadingMore}
-                        className="group relative px-8 py-3 bg-cyber-800 hover:bg-cyber-700 text-white font-semibold rounded-full border border-cyber-700 hover:border-cyber-accent transition-all shadow-lg shadow-black/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="group relative px-8 py-3 bg-candy-800 hover:bg-candy-700 text-white font-semibold rounded-full border-2 border-pink-300/50 hover:border-candy-accent hover:-translate-y-1 transition-all shadow-lg shadow-pink-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isLoadingMore ? (
                           <div className="flex items-center gap-2">
-                            <Loader2 className="w-5 h-5 animate-spin text-cyber-accent" />
+                            <Loader2 className="w-5 h-5 animate-spin text-candy-accent" />
                             <span>{t.loadingMore}</span>
                           </div>
                         ) : (
@@ -332,23 +334,23 @@ const App: React.FC = () => {
                             <ChevronDown className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
                           </div>
                         )}
-                        <div className="absolute inset-0 rounded-full ring-2 ring-white/10 group-hover:ring-cyber-accent/50 transition-all" />
+                        <div className="absolute inset-0 rounded-full ring-2 ring-white/10 group-hover:ring-candy-accent/50 transition-all" />
                       </button>
                     </div>
                   )}
                   
                   {(!hasNextPage || filters.favoritesOnly) && (
-                    <div className="text-center text-gray-500 text-sm py-8 border-t border-cyber-800 mt-8">
+                    <div className="text-center text-pink-200/70 text-sm py-8 border-t-2 border-dashed border-pink-300/30 mt-8">
                       {t.noMoreResults}
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="flex h-64 flex-col items-center justify-center rounded-xl border border-dashed border-cyber-700 text-center">
+                <div className="flex h-64 flex-col items-center justify-center rounded-3xl border border-dashed border-candy-700 text-center">
                   <p className="text-gray-500">{t.noResults}</p>
                   <button 
                     onClick={() => setFilters({ source: null, genre: null, search: '', favoritesOnly: false })}
-                    className="mt-2 text-cyber-accent hover:underline"
+                    className="mt-2 text-candy-accent hover:underline"
                   >
                     {t.clearFilters}
                   </button>
@@ -362,7 +364,7 @@ const App: React.FC = () => {
       {/* Scroll to Top Button */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 z-40 p-3 rounded-full bg-cyber-accent text-white shadow-lg shadow-cyber-accent/30 hover:bg-blue-600 transition-all duration-300 transform ${
+        className={`fixed bottom-8 right-8 z-40 p-3 rounded-full bg-gradient-to-br from-pink-400 to-fuchsia-400 text-white shadow-lg shadow-pink-500/40 hover:scale-110 hover:from-pink-300 transition-all duration-300 transform ${
           showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'
         }`}
       >

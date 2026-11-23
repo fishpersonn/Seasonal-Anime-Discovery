@@ -74,7 +74,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   };
 
   const sidebarClasses = `
-    fixed inset-y-0 left-0 z-40 w-72 transform bg-cyber-900 border-r border-cyber-700 p-6 transition-transform duration-300 ease-in-out overflow-y-auto
+    fixed inset-y-0 left-0 z-40 w-72 transform bg-candy-900 border-r border-pink-300/30 p-6 transition-transform duration-300 ease-in-out overflow-y-auto
     ${isOpen ? 'translate-x-0' : '-translate-x-full'}
     md:relative md:translate-x-0 md:block md:h-[calc(100vh-80px)] md:border-r-0 md:bg-transparent
   `;
@@ -93,25 +93,25 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       <aside className={sidebarClasses}>
         <div className="flex items-center justify-between mb-8 md:hidden">
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <Filter className="w-5 h-5 text-cyber-accent" /> {t.filters}
+            <Filter className="w-5 h-5 text-candy-accent" /> {t.filters}
           </h2>
-          <button onClick={onCloseMobile} className="p-2 text-gray-400 hover:text-white">
+          <button onClick={onCloseMobile} className="p-2 text-pink-200/80 hover:text-white">
             <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* Header & Show All Button */}
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">{t.refineBy}</h3>
+          <h3 className="text-sm font-semibold text-pink-200/80 uppercase tracking-wider">{t.refineBy}</h3>
         </div>
 
         {/* Favorites Filter */}
         <button
           onClick={toggleFavorites}
-          className={`w-full mb-4 py-3 px-4 rounded-xl transition-all flex items-center gap-3 font-semibold border ${
+          className={`w-full mb-4 py-3 px-4 rounded-3xl transition-all flex items-center gap-3 font-semibold border ${
             filters.favoritesOnly
-              ? 'bg-red-500/10 border-red-500 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
-              : 'bg-cyber-800 border-cyber-700 text-gray-400 hover:border-red-500/50 hover:text-red-400'
+              ? 'bg-pink-500/20 border-pink-400 text-pink-200 shadow-[0_0_18px_rgba(255,126,182,0.4)]'
+              : 'bg-candy-800 border-pink-300/30 text-pink-200/80 hover:border-pink-400 hover:text-pink-300'
           }`}
         >
           <Heart className={`w-5 h-5 ${filters.favoritesOnly ? 'fill-current' : ''}`} />
@@ -122,7 +122,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {(filters.source || filters.genre || filters.favoritesOnly) && (
           <button 
             onClick={clearFilters}
-            className="w-full mb-8 py-2.5 px-4 bg-cyber-accent hover:bg-blue-600 text-white rounded-xl transition-all flex items-center justify-center gap-2 font-semibold shadow-lg shadow-cyber-accent/20 border border-blue-400/30 group animate-in fade-in slide-in-from-top-2 duration-200"
+            className="w-full mb-8 py-2.5 px-4 bg-candy-accent hover:bg-pink-400 text-white rounded-3xl transition-all flex items-center justify-center gap-2 font-semibold shadow-lg shadow-pink-400/30 border-2 border-pink-200/40 group animate-in fade-in slide-in-from-top-2 duration-200"
           >
             <Layers className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
             {t.showAll}
@@ -132,21 +132,21 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {/* Source Section */}
         <div className="mb-8">
           <h4 className="flex items-center gap-2 mb-4 text-white font-semibold">
-            <BookOpen className="w-4 h-4 text-cyber-accent" /> {t.source}
+            <BookOpen className="w-4 h-4 text-candy-accent" /> {t.source}
           </h4>
           <div className="space-y-2">
             {sources.map(([source, count]) => (
               <button
                 key={source}
                 onClick={() => handleSourceClick(source)}
-                className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded-lg transition-all ${
+                className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded-2xl transition-all ${
                   filters.source === source 
-                    ? 'bg-cyber-800 border-l-4 border-cyber-accent text-white pl-2' 
-                    : 'text-gray-400 hover:bg-cyber-800 hover:text-white border-l-4 border-transparent'
+                    ? 'bg-candy-800 border-l-8 border-candy-accent text-white pl-2' 
+                    : 'text-pink-200/80 hover:bg-candy-800 hover:text-white border-l-8 border-transparent'
                 }`}
               >
                 <span>{source}</span>
-                <span className={`text-xs ${filters.source === source ? 'text-white' : 'text-gray-600'}`}>
+                <span className={`text-xs ${filters.source === source ? 'text-white' : 'text-pink-200/80'}`}>
                   {count}
                 </span>
               </button>
@@ -157,7 +157,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {/* Genres Section */}
         <div className="mb-8">
           <h4 className="flex items-center gap-2 mb-4 text-white font-semibold">
-            <Sparkles className="w-4 h-4 text-cyber-accent" /> {t.genres}
+            <Sparkles className="w-4 h-4 text-candy-accent" /> {t.genres}
           </h4>
           <div className="flex flex-wrap gap-2">
             {genres.map(([id, { name, count }]) => (
@@ -166,8 +166,8 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 onClick={() => handleGenreClick(id)}
                 className={`px-3 py-1.5 text-xs rounded-full border transition-all ${
                   filters.genre === id
-                    ? 'bg-cyber-accent border-cyber-accent text-white shadow-lg shadow-cyber-accent/20'
-                    : 'bg-transparent border-cyber-700 text-gray-400 hover:border-cyber-highlight hover:text-cyber-highlight'
+                    ? 'bg-candy-accent border-candy-accent text-white shadow-lg shadow-pink-400/30'
+                    : 'bg-transparent border-pink-300/30 text-pink-200/80 hover:border-candy-highlight hover:text-candy-highlight'
                 }`}
               >
                 {name} <span className="opacity-60 ml-1">({count})</span>

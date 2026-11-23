@@ -44,17 +44,17 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-candy-900/80 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-cyber-900 rounded-2xl border border-cyber-700 shadow-2xl shadow-cyber-accent/20 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-candy-900 rounded-[2rem] border-2 border-pink-300/30 shadow-2xl shadow-pink-400/30 animate-in fade-in zoom-in-95 duration-200">
         
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/50 text-white hover:bg-cyber-accent transition-colors backdrop-blur-md"
+          className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/50 text-white hover:bg-candy-accent transition-colors backdrop-blur-md"
         >
           <X className="w-6 h-6" />
         </button>
@@ -70,7 +70,7 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
                 alt={anime.title}
                 className="w-full h-full object-cover lg:rounded-l-2xl"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-cyber-900 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-cyber-900/90" />
+              <div className="absolute inset-0 bg-gradient-to-t from-candy-900 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-candy-900/90" />
             </div>
             
             <div className="absolute bottom-0 left-0 w-full p-6 lg:hidden">
@@ -91,7 +91,7 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
                     {anime.title_english || anime.title}
                   </h2>
                   {anime.title_japanese && (
-                    <h3 className="text-lg text-gray-400 font-medium">
+                    <h3 className="text-lg text-pink-200/80 font-medium">
                       {anime.title_japanese}
                     </h3>
                   )}
@@ -99,10 +99,10 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
                 {/* Favorite Button (Desktop) */}
                 <button
                   onClick={() => toggleFavorite(anime.mal_id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${
                     isFavorite
-                      ? 'bg-red-500/10 border-red-500/50 text-red-400'
-                      : 'bg-cyber-800 border-cyber-700 text-gray-400 hover:text-red-400 hover:border-red-500/30'
+                      ? 'bg-pink-500/20 border-pink-400 text-pink-300'
+                      : 'bg-candy-800 border-pink-300/30 text-pink-200/80 hover:text-pink-300 hover:border-pink-400'
                   }`}
                 >
                   <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
@@ -113,31 +113,31 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
 
             {/* Stats Row */}
             <div className="flex flex-wrap gap-4 text-sm font-medium">
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-                <Star className="w-4 h-4 fill-yellow-400" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-pink-400/20 text-pink-200 border-2 border-pink-300/40">
+                <Star className="w-4 h-4 fill-pink-300" />
                 <span>{anime.score || 'N/A'} {t.score}</span>
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-800 text-gray-300 border border-cyber-700">
-                <Users className="w-4 h-4 text-cyber-highlight" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-candy-800 text-pink-200/80 border-2 border-pink-300/30">
+                <Users className="w-4 h-4 text-candy-highlight" />
                 <span>{anime.members.toLocaleString()} {t.members}</span>
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-800 text-gray-300 border border-cyber-700">
-                <Heart className="w-4 h-4 text-red-400" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-candy-800 text-pink-200/80 border-2 border-pink-300/30">
+                <Heart className="w-4 h-4 text-pink-300" />
                 <span>{anime.favorites.toLocaleString()} {t.favs}</span>
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyber-800 text-gray-300 border border-cyber-700">
-                <Calendar className="w-4 h-4 text-blue-400" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-candy-800 text-pink-200/80 border-2 border-pink-300/30">
+                <Calendar className="w-4 h-4 text-sky-300" />
                 <span>{anime.year || 2026}</span>
               </div>
             </div>
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 text-xs font-bold text-black bg-white rounded-md">
+              <span className="px-3 py-1 text-xs font-bold text-black bg-white rounded-full">
                 {anime.type}
               </span>
               {anime.genres.map(genre => (
-                <span key={genre.mal_id} className="px-3 py-1 text-xs text-cyber-highlight border border-cyber-700 rounded-md bg-cyber-800/50">
+                <span key={genre.mal_id} className="px-3 py-1 text-xs text-candy-highlight border-2 border-pink-300/30 rounded-full bg-candy-800/50">
                   {genre.name}
                 </span>
               ))}
@@ -154,7 +154,7 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
                     href={getGoogleTranslateUrl(anime.synopsis)}
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-xs text-cyber-highlight hover:text-white transition-colors border border-cyber-700 hover:bg-cyber-800 px-2 py-1 rounded-md"
+                    className="flex items-center gap-1.5 text-xs text-candy-highlight hover:text-white transition-colors border-2 border-pink-300/30 hover:bg-candy-800 px-2 py-1 rounded-full"
                     title="Translate with Google"
                   >
                     <Languages className="w-3 h-3" />
@@ -164,8 +164,8 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
                 )}
               </div>
               
-              <div className="p-4 rounded-xl bg-cyber-800/50 border border-cyber-700 min-h-[100px]">
-                <p className="text-gray-300 leading-relaxed text-sm max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="p-4 rounded-3xl bg-candy-800/50 border-2 border-pink-300/30 min-h-[100px]">
+                <p className="text-pink-200/80 leading-relaxed text-sm max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                   {anime.synopsis || t.noSynopsis}
                 </p>
               </div>
@@ -177,11 +177,11 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
                 <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                   <Play className="w-4 h-4 fill-white" /> {t.trailer}
                 </h3>
-                <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-cyber-700">
+                <div className="relative w-full aspect-video rounded-3xl overflow-hidden bg-black border-2 border-pink-300/30">
                   {!isVideoLoaded && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-cyber-800 z-10">
-                      <Loader2 className="w-8 h-8 text-cyber-accent animate-spin" />
-                      <span className="text-sm text-gray-400 font-medium animate-pulse">Loading trailer...</span>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-candy-800 z-10">
+                      <Loader2 className="w-8 h-8 text-candy-accent animate-spin" />
+                      <span className="text-sm text-pink-200/80 font-medium animate-pulse">Loading trailer...</span>
                     </div>
                   )}
                   <iframe 
@@ -196,18 +196,18 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
                 </div>
               </div>
             ) : (
-               <div className="p-4 rounded-xl border border-dashed border-cyber-700 text-center text-gray-500 text-sm">
+               <div className="p-4 rounded-3xl border-2 border-dashed border-pink-300/30 text-center text-pink-200/80 text-sm">
                  {t.noTrailer}
                </div>
             )}
             
-            <div className="pt-4 border-t border-cyber-700 flex justify-end gap-3 flex-wrap">
+            <div className="pt-4 border-t border-pink-300/30 flex justify-end gap-3 flex-wrap">
                {anime.trailer.url && (
                  <a 
                    href={anime.trailer.url} 
                    target="_blank" 
                    rel="noopener noreferrer"
-                   className="px-6 py-2 bg-[#FF0000] hover:bg-[#CC0000] text-white font-semibold rounded-lg transition-colors flex items-center gap-2 shadow-lg shadow-red-900/20"
+                   className="px-6 py-2 bg-[#FF0000] hover:bg-[#CC0000] text-white font-semibold rounded-2xl transition-colors flex items-center gap-2 shadow-lg shadow-red-900/20"
                  >
                    <Youtube className="w-5 h-5" />
                    {t.watchTrailer}
@@ -217,7 +217,7 @@ const AnimeModal: React.FC<AnimeModalProps> = ({ anime, isOpen, onClose, languag
                  href={anime.url} 
                  target="_blank" 
                  rel="noopener noreferrer"
-                 className="px-6 py-2 bg-cyber-accent hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors flex items-center gap-2"
+                 className="px-6 py-2 bg-candy-accent hover:bg-pink-400 text-white font-semibold rounded-2xl transition-colors flex items-center gap-2"
                >
                  {t.viewMal}
                  <ExternalLink className="w-4 h-4" />
